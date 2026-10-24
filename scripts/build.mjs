@@ -53,6 +53,28 @@ function frontmatter(fields) {
   return `---\n${lines.join('\n')}\n---\n\n`;
 }
 
+const REPO = PLUGIN.repository.replace('https://github.com/', '');
+
+/** How each package installs, as its README shows it (each agent's own documented commands). */
+const INSTALL = {
+  'claude-code': [
+    '```bash',
+    `claude plugin marketplace add ${REPO}`,
+    `claude plugin install ${PLUGIN.name}@${PLUGIN.name}`,
+    '```',
+    '',
+    `Or, in a session on Claude Code 2.1.275 or later: \`/plugin install ${PLUGIN.name} --marketplace ${REPO}\`.`,
+  ],
+  codex: [
+    '```bash',
+    `codex plugin marketplace add ${REPO}`,
+    '```',
+    '',
+    'Then run `/plugins` in Codex, open Stride and install it.',
+  ],
+  cursor: ['Copy this folder to `~/.cursor/plugins/local/stride` and run **Developer: Reload Window**.'],
+};
+
 function packageReadme(agent) {
   const a = AGENTS[agent];
   return [
@@ -63,9 +85,13 @@ function packageReadme(agent) {
     `- \`${a.invoke.next}\` picks up your next story and starts it.`,
     `- \`${a.invoke.done}\` checks it against its acceptance criteria and hands it back for review.`,
     '',
-    `It connects ${a.label} to Stride's MCP server, \`${MCP.url}\`. You sign in to Stride in your browser the first time; there is no key to copy.`,
+    `It connects ${a.label} to Stride's MCP server, \`${MCP.url}\`. You sign in to Stride in your browser; there is no key to copy.`,
     '',
-    `Install and setup: see the [repository README](../README.md) and ${a.homepage}.`,
+    '## Install',
+    '',
+    ...INSTALL[agent],
+    '',
+    `Signing in and the rest of the setup: the [repository README](../README.md) and ${a.homepage}.`,
     '',
   ].join('\n');
 }

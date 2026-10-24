@@ -5,6 +5,10 @@ Work your Stride backlog from your coding agent: pick up your next story with it
 - `/stride-next` picks up your next story and starts it.
 - `/stride-done` checks it against its acceptance criteria and hands it back for review.
 
-It connects Cursor to Stride's MCP server, `https://www.stride.page/api/mcp/stride`. You sign in to Stride in your browser the first time; there is no key to copy.
+It connects Cursor to Stride's MCP server, `https://www.stride.page/api/mcp/stride`. You sign in to Stride in your browser; there is no key to copy.
 
-Install and setup: see the [repository README](../README.md) and https://www.stride.page/integrations/cursor.
+## Install
+
+Copy this folder to `~/.cursor/plugins/local/stride` and run **Developer: Reload Window**.
+
+Signing in and the rest of the setup: the [repository README](../README.md) and https://www.stride.page/integrations/cursor.
