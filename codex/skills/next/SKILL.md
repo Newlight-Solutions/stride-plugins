@@ -1,5 +1,5 @@
 ---
-name: "stride-next"
+name: "next"
 description: "Pick up your next Stride story: the one a teammate staged for you, or the top story assigned to you, with its acceptance criteria, designs and docs. Starts it in Stride and sets up a branch."
 ---
 
@@ -20,7 +20,7 @@ If the user named a story key in their message, that is the story.
      priority), with its full context in the same call.
    - If there is nothing to work on, say so and stop. Suggest staging a
      story from its "Hand to your agent" panel in Stride, or assigning one to
-     themselves, and running `$stride-next` again.
+     themselves, and running `$stride:next` again.
    - If Stride's tools are missing, or answer that the request is not
      authorized, the user needs to sign in to Stride. Ask them to open Stride in the plugin browser (`/plugins` in Codex CLI, or the Plugins tab in the ChatGPT desktop app) and connect it when prompted. A browser window opens to sign in to Stride.
 2. **Brief the user** in a few lines: the key and title, the goal in a
@@ -39,5 +39,5 @@ If the user named a story key in their message, that is the story.
    user is already on a branch for this story. Never discard, reset or stash
    uncommitted work without asking.
 5. **Implement it** against the acceptance criteria, keeping the user in the
-   loop. When it is done, suggest `$stride-done` to check the work and hand it back
+   loop. When it is done, suggest `$stride:done` to check the work and hand it back
    for review.

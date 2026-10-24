@@ -5,8 +5,8 @@ Two commands do the loop:
 
 | | Claude Code | Codex | Cursor |
 |---|---|---|---|
-| Pick up your next story, with its full spec, and start it | `/stride:next` | `$stride-next` | `/stride-next` |
-| Check it against its acceptance criteria and hand it back for review | `/stride:done` | `$stride-done` | `/stride-done` |
+| Pick up your next story, with its full spec, and start it | `/stride:next` | `$stride:next` | `/stride-next` |
+| Check it against its acceptance criteria and hand it back for review | `/stride:done` | `$stride:done` | `/stride-done` |
 
 **Next** pulls the story a teammate staged for you with "Hand to your agent"
 or, when nothing is staged, the top story assigned to you that is still to do
@@ -55,7 +55,7 @@ codex plugin marketplace add Newlight-Solutions/stride-plugins
 
 Then start `codex`, run `/plugins`, open **Stride** and install it. Codex asks
 you to sign in to Stride when you install. Start a new session, then run
-`$stride-next`.
+`$stride:next`.
 
 ## Cursor
 

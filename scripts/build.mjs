@@ -180,7 +180,7 @@ function packageReadme(agent) {
   for (const [skill, meta] of Object.entries(SKILLS)) {
     const name = AGENTS.codex.skills[skill];
     files.set(`${dir}/skills/${name}/SKILL.md`, frontmatter({ name, description: meta.description }) + skillBody(skill, 'codex'));
-    // Run only when the user invokes it ($stride-next / $stride-done).
+    // Run only when the user invokes it ($stride:next / $stride:done).
     files.set(`${dir}/skills/${name}/agents/openai.yaml`, 'policy:\n  allow_implicit_invocation: false\n');
   }
   files.set(`${dir}/assets/logo.png`, readFileSync(join(ROOT, 'assets', 'logo.png')));
@@ -273,6 +273,15 @@ if (CHECK) {
   console.log(`build: ${files.size} generated files match their source.`);
 } else {
   for (const p of stale) rmSync(join(ROOT, p));
+  // A renamed skill leaves its folder behind once its files go; drop the
+  // folders that are now empty, so the package lists only what is generated.
+  const pruneEmpty = (dir) => {
+    for (const entry of readdirSync(join(ROOT, dir), { withFileTypes: true })) {
+      if (entry.isDirectory()) pruneEmpty(`${dir}/${entry.name}`);
+    }
+    if (readdirSync(join(ROOT, dir)).length === 0) rmSync(join(ROOT, dir), { recursive: true });
+  };
+  for (const dir of GENERATED_DIRS) if (existsSync(join(ROOT, dir))) pruneEmpty(dir);
   for (const [path, content] of files) {
     mkdirSync(dirname(join(ROOT, path)), { recursive: true });
     writeFileSync(join(ROOT, path), content);

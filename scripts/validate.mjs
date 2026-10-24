@@ -208,8 +208,9 @@ function checkAuthor(where, author, { requireName = true, allowed }) {
       }
     }
   }
-  checkSkills(pkg, ['stride-next', 'stride-done']);
-  for (const name of ['stride-next', 'stride-done']) {
+  // Codex exposes them as `stride:next` and `stride:done` (plugin name : skill name).
+  checkSkills(pkg, ['next', 'done']);
+  for (const name of ['next', 'done']) {
     const rel = `${pkg}/skills/${name}/agents/openai.yaml`;
     if (!existsSync(join(ROOT, rel)) || !/allow_implicit_invocation:\s*false/.test(readFileSync(join(ROOT, rel), 'utf8'))) {
       fail(rel, 'skills that write must turn off implicit invocation');

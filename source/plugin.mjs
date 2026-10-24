@@ -43,8 +43,11 @@ export const AGENTS = {
   codex: {
     label: 'Codex',
     homepage: 'https://www.stride.page/integrations/codex',
-    skills: { next: 'stride-next', done: 'stride-done' },
-    invoke: { next: '$stride-next', done: '$stride-done' },
+    // Codex qualifies a plugin's skills with the plugin's name ("a skill named
+    // `search` beneath a plugin named `sample` is exposed as `sample:search`",
+    // codex-rs/ext/skills/src/loader/namespace.rs), so `next` is `$stride:next`.
+    skills: { next: 'next', done: 'done' },
+    invoke: { next: '$stride:next', done: '$stride:done' },
     signIn:
       'open Stride in the plugin browser (`/plugins` in Codex CLI, or the Plugins tab in the ChatGPT desktop app) and connect it when prompted. A browser window opens to sign in to Stride.',
   },

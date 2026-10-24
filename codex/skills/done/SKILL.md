@@ -1,5 +1,5 @@
 ---
-name: "stride-done"
+name: "done"
 description: "Finish the Stride story you are working on: check it against its acceptance criteria, record what changed, and move it to In Review."
 ---
 
@@ -39,4 +39,4 @@ If the user named a story key in their message, that is the story.
    again with `get_story` and retry once. Never pass `force` without the
    user's explicit approval.
 6. **Tell the user where the story stands**, with its key. To pick up the
-   next one, they can run `$stride-next`.
+   next one, they can run `$stride:next`.
