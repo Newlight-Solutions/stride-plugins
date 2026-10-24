@@ -87,11 +87,19 @@ function packageReadme(agent) {
     '',
     `It connects ${a.label} to Stride's MCP server, \`${MCP.url}\`. You sign in to Stride in your browser; there is no key to copy.`,
     '',
+    '## What it does',
+    '',
+    `- It adds one MCP server, Stride's, at \`${MCP.url}\`. You sign in to Stride with OAuth in your browser, and the agent acts with your Stride permissions in the projects you allow.`,
+    `- \`${a.invoke.next}\` reads your next story from Stride, moves it to In Progress with a short comment if it is still to do, and, in a git repository, creates a branch named after it.`,
+    `- \`${a.invoke.done}\` runs your repository's own tests and linters and checks the work against the story's acceptance criteria. When every criterion is met, it moves the story to In Review with a comment saying what changed; otherwise it comments what remains. It commits only when you say so, and pushes or opens a pull request only when you ask.`,
+    '- Both run only when you invoke them. The plugin has no hooks and no scripts of its own, and its only connection is to Stride through that server.',
+    '',
     '## Install',
     '',
     ...INSTALL[agent],
     '',
-    `Signing in and the rest of the setup: the [repository README](../README.md) and ${a.homepage}.`,
+    // An absolute link: an installed package, or its directory listing, has no `../`.
+    `Signing in and the rest of the setup: the [repository README](${PLUGIN.repository}#readme) and ${a.homepage}.`,
     '',
   ].join('\n');
 }

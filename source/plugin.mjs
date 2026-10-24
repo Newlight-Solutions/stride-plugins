@@ -5,7 +5,7 @@
 export const PLUGIN = {
   name: 'stride',
   displayName: 'Stride',
-  version: '1.0.0',
+  version: '1.0.1',
   description:
     'Work your Stride backlog from your coding agent: pick up your next story with its acceptance criteria, designs and docs, and hand it back for review when it is done.',
   shortDescription: 'Your next Stride story, with its full spec, in your coding agent.',
@@ -37,8 +37,10 @@ export const AGENTS = {
     homepage: 'https://www.stride.page/integrations/claude-code',
     skills: { next: 'next', done: 'done' },
     invoke: { next: '/stride:next', done: '/stride:done' },
+    // The same package is what Anthropic's directory installs in the Claude
+    // apps (claude.ai, the desktop app, Cowork), which have no `/mcp`.
     signIn:
-      'run `/mcp`, select the Stride server (`plugin:stride:stride`), and choose Authenticate (Re-authenticate if it was signed in before). A browser window opens to sign in to Stride.',
+      'run `/mcp` in Claude Code, select the Stride server (`plugin:stride:stride`), and choose Authenticate (Re-authenticate if it was signed in before), which opens a browser window to sign in to Stride; in the Claude app, open Customize → Connectors and connect Stride instead.',
   },
   codex: {
     label: 'Codex',
