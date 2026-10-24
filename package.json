@@ -1,0 +1,14 @@
+{
+  "name": "stride-plugins",
+  "private": true,
+  "type": "module",
+  "description": "Stride plugins for Claude Code, Codex and Cursor.",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs --check && node scripts/validate.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "stride": {
+      "url": "https://www.stride.page/api/mcp/stride"
+    }
+  }
+}

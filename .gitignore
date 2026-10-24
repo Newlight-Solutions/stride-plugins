@@ -1,0 +1,5 @@
+node_modules/
+.DS_Store
+# The MCP Registry signing key and publisher session never belong in git.
+*.pem
+.mcpregistry_*

@@ -1,0 +1,21 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # The packages match their source, and every manifest, marketplace and
+      # the registry entry follow the rules their agents document.
+      - run: npm run check

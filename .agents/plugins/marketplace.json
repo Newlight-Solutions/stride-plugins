@@ -1,0 +1,20 @@
+{
+  "name": "stride",
+  "interface": {
+    "displayName": "Stride"
+  },
+  "plugins": [
+    {
+      "name": "stride",
+      "source": {
+        "source": "local",
+        "path": "./codex"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

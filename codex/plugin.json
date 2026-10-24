@@ -1,0 +1,39 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "stride",
+  "version": "1.0.0",
+  "description": "Work your Stride backlog from your coding agent: pick up your next story with its acceptance criteria, designs and docs, and hand it back for review when it is done.",
+  "author": {
+    "name": "Newlight Solutions",
+    "email": "info@newlightai.com",
+    "url": "https://www.stride.page"
+  },
+  "homepage": "https://www.stride.page/integrations/codex",
+  "repository": "https://github.com/Newlight-Solutions/stride-plugins",
+  "license": "MIT",
+  "keywords": [
+    "stride",
+    "mcp",
+    "project-management",
+    "agile",
+    "user-stories",
+    "acceptance-criteria",
+    "sprints"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Stride",
+        "shortDescription": "Your next Stride story, with its full spec, in your coding agent.",
+        "longDescription": "Work your Stride backlog from your coding agent: pick up your next story with its acceptance criteria, designs and docs, and hand it back for review when it is done.",
+        "developerName": "Newlight Solutions",
+        "category": "Productivity",
+        "websiteURL": "https://www.stride.page",
+        "privacyPolicyURL": "https://www.stride.page/legal/privacy",
+        "termsOfServiceURL": "https://www.stride.page/legal/terms",
+        "brandColor": "#0040E0",
+        "logo": "./assets/logo.png"
+      }
+    }
+  }
+}
