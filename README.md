@@ -22,7 +22,7 @@ It asks before committing, and pushes only when you ask.
 
 Every plugin connects your agent to Stride's MCP server,
 `https://www.stride.page/api/mcp/stride`. **You sign in to Stride in your
-browser the first time; there is no key to copy.** You choose the project the
+browser; there is no key to copy.** You choose the project the
 agent works in and the projects it can reach, and you can disconnect it at any
 time in Stride under Settings → Integrations → Connected apps. The agent
 works with your own permissions in each project, and everything it writes is
@@ -60,10 +60,16 @@ you to sign in to Stride when you install. Start a new session, then run
 ## Cursor
 
 Copy the [`cursor`](./cursor) folder to `~/.cursor/plugins/local/stride` and
-run **Developer: Reload Window**. Once Stride is listed in the Cursor
-Marketplace, you can install it there instead: open **Customize**, find
-Stride, and select **Install**. Sign in when Cursor asks, then run
-`/stride-next` in chat.
+run **Developer: Reload Window**. Then open **Customize → MCPs**, where Stride
+shows that it needs to sign in, and follow its prompt; your browser opens to
+sign in to Stride. After that, run `/stride-next` in chat. (On Enterprise,
+Cursor loads local plugins only when an admin allows local plugin imports.)
+
+On a Teams or Enterprise plan, an admin can instead import this repository as
+a team marketplace (**Dashboard → Plugins & MCPs → Add Marketplace → Import
+from Repo**), and everyone installs Stride from **Customize**. Once Stride is
+listed in the Cursor Marketplace, anyone can install it from **Customize**:
+find Stride and select **Install**.
 
 Prefer the server without the commands? Add it to `~/.cursor/mcp.json`:
 
