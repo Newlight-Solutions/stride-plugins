@@ -24,7 +24,7 @@ Story the user named, if any: `$ARGUMENTS`
      story from its "Hand to your agent" panel in Stride, or assigning one to
      themselves, and running `/stride:next` again.
    - If Stride's tools are missing, or answer that the request is not
-     authorized, the user needs to sign in to Stride. Ask them to run `/mcp`, select the Stride server (`plugin:stride:stride`), and choose Authenticate. A browser window opens to sign in to Stride.
+     authorized, the user needs to sign in to Stride. Ask them to run `/mcp`, select the Stride server (`plugin:stride:stride`), and choose Authenticate (Re-authenticate if it was signed in before). A browser window opens to sign in to Stride.
 2. **Brief the user** in a few lines: the key and title, the goal in a
    sentence or two, every acceptance criterion as a numbered list, and
    whatever is linked that changes the work (designs, documents, blocking or

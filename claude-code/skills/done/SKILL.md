@@ -18,7 +18,7 @@ Story the user named, if any: `$ARGUMENTS`
    picked up in this conversation; else the key in the current git branch
    name (`orb-526-export-csv` is `ORB-526`); else ask. Read it with
    `get_story_context` so you have its acceptance criteria. If Stride's tools
-   are missing or not authorized, ask the user to run `/mcp`, select the Stride server (`plugin:stride:stride`), and choose Authenticate. A browser window opens to sign in to Stride.
+   are missing or not authorized, ask the user to run `/mcp`, select the Stride server (`plugin:stride:stride`), and choose Authenticate (Re-authenticate if it was signed in before). A browser window opens to sign in to Stride.
 2. **Check the work.** Run the repository's own tests and linters for the
    code you changed. If anything fails, report it and stop, unless the user
    tells you to go on.

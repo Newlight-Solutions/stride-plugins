@@ -37,7 +37,7 @@ export const AGENTS = {
     skills: { next: 'next', done: 'done' },
     invoke: { next: '/stride:next', done: '/stride:done' },
     signIn:
-      'run `/mcp`, select the Stride server (`plugin:stride:stride`), and choose Authenticate. A browser window opens to sign in to Stride.',
+      'run `/mcp`, select the Stride server (`plugin:stride:stride`), and choose Authenticate (Re-authenticate if it was signed in before). A browser window opens to sign in to Stride.',
   },
   codex: {
     label: 'Codex',
@@ -45,7 +45,7 @@ export const AGENTS = {
     skills: { next: 'stride-next', done: 'stride-done' },
     invoke: { next: '$stride-next', done: '$stride-done' },
     signIn:
-      'reconnect Stride from the plugin browser (`/plugins` in Codex CLI, or the Plugins tab in the ChatGPT desktop app). A browser window opens to sign in to Stride.',
+      'open Stride in the plugin browser (`/plugins` in Codex CLI, or the Plugins tab in the ChatGPT desktop app) and connect it when prompted. A browser window opens to sign in to Stride.',
   },
   cursor: {
     label: 'Cursor',
@@ -53,6 +53,6 @@ export const AGENTS = {
     skills: { next: 'stride-next', done: 'stride-done' },
     invoke: { next: '/stride-next', done: '/stride-done' },
     signIn:
-      "connect Stride again from Cursor's MCP settings, where Stride shows that it needs to sign in. A browser window opens to sign in to Stride.",
+      'open Customize → MCPs in Cursor, where Stride shows that it needs to sign in, and connect it again. A browser window opens to sign in to Stride.',
   },
 };

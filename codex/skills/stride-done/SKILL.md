@@ -16,7 +16,7 @@ If the user named a story key in their message, that is the story.
    picked up in this conversation; else the key in the current git branch
    name (`orb-526-export-csv` is `ORB-526`); else ask. Read it with
    `get_story_context` so you have its acceptance criteria. If Stride's tools
-   are missing or not authorized, ask the user to reconnect Stride from the plugin browser (`/plugins` in Codex CLI, or the Plugins tab in the ChatGPT desktop app). A browser window opens to sign in to Stride.
+   are missing or not authorized, ask the user to open Stride in the plugin browser (`/plugins` in Codex CLI, or the Plugins tab in the ChatGPT desktop app) and connect it when prompted. A browser window opens to sign in to Stride.
 2. **Check the work.** Run the repository's own tests and linters for the
    code you changed. If anything fails, report it and stop, unless the user
    tells you to go on.

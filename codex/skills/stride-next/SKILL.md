@@ -22,7 +22,7 @@ If the user named a story key in their message, that is the story.
      story from its "Hand to your agent" panel in Stride, or assigning one to
      themselves, and running `$stride-next` again.
    - If Stride's tools are missing, or answer that the request is not
-     authorized, the user needs to sign in to Stride. Ask them to reconnect Stride from the plugin browser (`/plugins` in Codex CLI, or the Plugins tab in the ChatGPT desktop app). A browser window opens to sign in to Stride.
+     authorized, the user needs to sign in to Stride. Ask them to open Stride in the plugin browser (`/plugins` in Codex CLI, or the Plugins tab in the ChatGPT desktop app) and connect it when prompted. A browser window opens to sign in to Stride.
 2. **Brief the user** in a few lines: the key and title, the goal in a
    sentence or two, every acceptance criterion as a numbered list, and
    whatever is linked that changes the work (designs, documents, blocking or
