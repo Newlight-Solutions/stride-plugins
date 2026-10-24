@@ -119,6 +119,14 @@ function checkAuthor(where, author, { requireName = true, allowed }) {
     if (manifest.homepage !== undefined && !isHttpsUrl(manifest.homepage)) fail(where, 'homepage must be a URL');
     for (const key of ['version', 'description', 'author']) if (manifest[key] === undefined) fail(where, `${key} is recommended`);
     checkAuthor(where, manifest.author, { allowed: ['name', 'email', 'url'] });
+    if (manifest.displayName !== undefined && typeof manifest.displayName !== 'string') fail(where, 'displayName must be a string');
+    // Directory listing fields (Anthropic's directory reads them): an image inside the plugin, and https URLs.
+    if (manifest.icon !== undefined && !(typeof manifest.icon === 'string' && manifest.icon.startsWith('./') && insideRoot(manifest.icon, pkg) && existsSync(join(ROOT, pkg, manifest.icon)))) {
+      fail(where, 'icon must be a ./ path to an image inside the plugin');
+    }
+    for (const key of ['documentationUrl', 'supportUrl', 'privacyPolicyUrl', 'termsOfServiceUrl']) {
+      if (manifest[key] !== undefined && !isHttpsUrl(manifest[key])) fail(where, `${key} must be an https URL`);
+    }
   }
   const mcp = readJson(`${pkg}/.mcp.json`);
   const server = mcp?.mcpServers?.stride;
@@ -309,7 +317,11 @@ function walk(rel) {
   }
   return out;
 }
+// Local-only files that .gitignore keeps out of the repository: the registry
+// signing key, the publisher's session, macOS folder metadata.
+const LOCAL_ONLY = /(^|\/)(\.DS_Store|\.mcpregistry_[^/]*|[^/]*\.pem)$/;
 for (const rel of walk('')) {
+  if (LOCAL_ONLY.test(rel)) continue;
   if (/\.(png|ico|jpg|jpeg|webp)$/i.test(rel)) continue;
   const bytes = readFileSync(join(ROOT, rel));
   if (bytes.includes(13)) fail(rel, 'CRLF line endings');

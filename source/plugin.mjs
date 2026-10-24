@@ -16,6 +16,7 @@ export const PLUGIN = {
   keywords: ['stride', 'mcp', 'project-management', 'agile', 'user-stories', 'acceptance-criteria', 'sprints'],
   websiteUrl: 'https://www.stride.page',
   privacyPolicyUrl: 'https://www.stride.page/legal/privacy',
+  supportUrl: 'https://github.com/Newlight-Solutions/stride-plugins/issues',
   termsOfServiceUrl: 'https://www.stride.page/legal/terms',
   brandColor: '#0040E0',
 };

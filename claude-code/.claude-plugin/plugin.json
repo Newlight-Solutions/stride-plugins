@@ -1,5 +1,6 @@
 {
   "name": "stride",
+  "displayName": "Stride",
   "version": "1.0.0",
   "description": "Work your Stride backlog from your coding agent: pick up your next story with its acceptance criteria, designs and docs, and hand it back for review when it is done.",
   "author": {
@@ -18,5 +19,10 @@
     "user-stories",
     "acceptance-criteria",
     "sprints"
-  ]
+  ],
+  "icon": "./assets/logo.png",
+  "documentationUrl": "https://www.stride.page/integrations/claude-code",
+  "supportUrl": "https://github.com/Newlight-Solutions/stride-plugins/issues",
+  "privacyPolicyUrl": "https://www.stride.page/legal/privacy",
+  "termsOfServiceUrl": "https://www.stride.page/legal/terms"
 }

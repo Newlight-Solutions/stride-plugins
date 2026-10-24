@@ -75,6 +75,7 @@ function packageReadme(agent) {
   const dir = 'claude-code';
   files.set(`${dir}/.claude-plugin/plugin.json`, json({
     name: PLUGIN.name,
+    displayName: PLUGIN.displayName,
     version: PLUGIN.version,
     description: PLUGIN.description,
     author: PLUGIN.author,
@@ -82,7 +83,14 @@ function packageReadme(agent) {
     repository: PLUGIN.repository,
     license: PLUGIN.license,
     keywords: PLUGIN.keywords,
+    // Read by Anthropic's plugin directory for the listing; Claude Code ignores them.
+    icon: './assets/logo.png',
+    documentationUrl: AGENTS['claude-code'].homepage,
+    supportUrl: PLUGIN.supportUrl,
+    privacyPolicyUrl: PLUGIN.privacyPolicyUrl,
+    termsOfServiceUrl: PLUGIN.termsOfServiceUrl,
   }));
+  files.set(`${dir}/assets/logo.png`, readFileSync(join(ROOT, 'assets', 'logo.png')));
   files.set(`${dir}/.mcp.json`, json({ mcpServers: { [MCP.serverName]: { type: 'http', url: MCP.url } } }));
   for (const [skill, meta] of Object.entries(SKILLS)) {
     const name = AGENTS['claude-code'].skills[skill];
