@@ -1,7 +1,7 @@
 {
   "name": "stride",
-  "displayName": "Stride",
-  "version": "1.0.1",
+  "displayName": "Stride AI",
+  "version": "1.0.2",
   "description": "Work your Stride backlog from your coding agent: pick up your next story with its acceptance criteria, designs and docs, and hand it back for review when it is done.",
   "author": {
     "name": "Newlight Solutions",

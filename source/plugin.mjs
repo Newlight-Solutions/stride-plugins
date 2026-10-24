@@ -5,7 +5,7 @@
 export const PLUGIN = {
   name: 'stride',
   displayName: 'Stride',
-  version: '1.0.1',
+  version: '1.0.2',
   description:
     'Work your Stride backlog from your coding agent: pick up your next story with its acceptance criteria, designs and docs, and hand it back for review when it is done.',
   shortDescription: 'Your next Stride story, with its full spec, in your coding agent.',
@@ -35,6 +35,10 @@ export const AGENTS = {
   'claude-code': {
     label: 'Claude Code',
     homepage: 'https://www.stride.page/integrations/claude-code',
+    // Anthropic's directory already lists a different "Stride" (a field-service
+    // connector), so this package's listing reads "Stride AI". Only the
+    // display name changes: `name` stays `stride`, and with it `/stride:next`.
+    displayName: 'Stride AI',
     skills: { next: 'next', done: 'done' },
     invoke: { next: '/stride:next', done: '/stride:done' },
     // The same package is what Anthropic's directory installs in the Claude

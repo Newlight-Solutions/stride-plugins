@@ -109,7 +109,7 @@ function packageReadme(agent) {
   const dir = 'claude-code';
   files.set(`${dir}/.claude-plugin/plugin.json`, json({
     name: PLUGIN.name,
-    displayName: PLUGIN.displayName,
+    displayName: AGENTS['claude-code'].displayName ?? PLUGIN.displayName,
     version: PLUGIN.version,
     description: PLUGIN.description,
     author: PLUGIN.author,
