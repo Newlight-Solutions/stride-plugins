@@ -53,8 +53,8 @@ claude mcp add --transport http stride https://www.stride.page/api/mcp/stride
 codex plugin marketplace add Newlight-Solutions/stride-plugins
 ```
 
-Then start `codex`, run `/plugins`, open **Stride** and install it. Codex asks
-you to sign in to Stride when you install. Start a new session, then run
+Then start `codex`, run `/plugins`, open **Stride AI** and install it. Codex
+asks you to sign in to Stride when you install. Start a new session, then run
 `$stride:next`.
 
 ## Cursor
@@ -95,6 +95,9 @@ it as `Authorization: Bearer <key>`. Setup for each agent:
 - `claude-code/`, `codex/` and `cursor/` are the three packages, each in its
   agent's own format. They are generated: edit `source/` and run
   `npm run build`.
+- `codex/` is also the package submitted to OpenAI's plugin directory
+  (ChatGPT and Codex), as Stride AI, with its review material. It carries its
+  own version, so a directory release leaves the other two packages alone.
 - `.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json` and
   `.cursor-plugin/marketplace.json` are the marketplaces the install commands
   above read.

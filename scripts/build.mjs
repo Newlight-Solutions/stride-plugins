@@ -12,7 +12,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { AGENTS, MCP, PLUGIN } from '../source/plugin.mjs';
+import { AGENTS, MCP, OPENAI, PLUGIN } from '../source/plugin.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CHECK = process.argv.includes('--check');
@@ -70,7 +70,7 @@ const INSTALL = {
     `codex plugin marketplace add ${REPO}`,
     '```',
     '',
-    'Then run `/plugins` in Codex, open Stride and install it.',
+    'Then run `/plugins` in Codex, open Stride AI and install it.',
   ],
   cursor: ['Copy this folder to `~/.cursor/plugins/local/stride` and run **Developer: Reload Window**.'],
 };
@@ -143,12 +143,14 @@ function packageReadme(agent) {
 }
 
 // ── Codex (Agent Plugins with OpenAI settings) ─────────────────────────────
+// Also the package submitted to OpenAI's plugin directory: its listing,
+// review and publication fields come from `OPENAI`.
 {
   const dir = 'codex';
   files.set(`${dir}/plugin.json`, json({
     $schema: 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json',
     name: PLUGIN.name,
-    version: PLUGIN.version,
+    version: OPENAI.version,
     description: PLUGIN.description,
     author: PLUGIN.author,
     homepage: AGENTS.codex.homepage,
@@ -158,17 +160,25 @@ function packageReadme(agent) {
     extensions: {
       'com.openai': {
         interface: {
-          displayName: PLUGIN.displayName,
-          shortDescription: PLUGIN.shortDescription,
-          longDescription: PLUGIN.description,
+          displayName: OPENAI.displayName,
+          shortDescription: OPENAI.shortDescription,
+          longDescription: OPENAI.longDescription,
           developerName: PLUGIN.author.name,
-          category: 'Productivity',
+          category: OPENAI.category,
+          capabilities: OPENAI.capabilities,
           websiteURL: PLUGIN.websiteUrl,
+          supportURL: PLUGIN.supportUrl,
           privacyPolicyURL: PLUGIN.privacyPolicyUrl,
           termsOfServiceURL: PLUGIN.termsOfServiceUrl,
+          defaultPrompt: OPENAI.defaultPrompt,
           brandColor: PLUGIN.brandColor,
+          composerIcon: './assets/logo.png',
+          composerIconDark: './assets/logo-dark.png',
           logo: './assets/logo.png',
+          logoDark: './assets/logo-dark.png',
         },
+        review: OPENAI.review,
+        publication: OPENAI.publication,
       },
     },
   }));
@@ -192,6 +202,8 @@ function packageReadme(agent) {
     files.set(`${dir}/skills/${name}/agents/openai.yaml`, 'policy:\n  allow_implicit_invocation: false\n');
   }
   files.set(`${dir}/assets/logo.png`, readFileSync(join(ROOT, 'assets', 'logo.png')));
+  // The same mark in the brand's dark-mode fill (#F7F8FA), for dark themes.
+  files.set(`${dir}/assets/logo-dark.png`, readFileSync(join(ROOT, 'assets', 'logo-dark.png')));
   files.set(`${dir}/README.md`, packageReadme('codex'));
 }
 

@@ -20,6 +20,6 @@ It connects Codex to Stride's MCP server, `https://www.stride.page/api/mcp/strid
 codex plugin marketplace add Newlight-Solutions/stride-plugins
 ```
 
-Then run `/plugins` in Codex, open Stride and install it.
+Then run `/plugins` in Codex, open Stride AI and install it.
 
 Signing in and the rest of the setup: the [repository README](https://github.com/Newlight-Solutions/stride-plugins#readme) and https://www.stride.page/integrations/codex.

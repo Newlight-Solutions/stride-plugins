@@ -108,6 +108,116 @@ function checkAuthor(where, author, { requireName = true, allowed }) {
   for (const key of Object.keys(author)) if (!allowed.includes(key)) fail(where, `author.${key} is not allowed`);
 }
 
+/** WCAG relative luminance of a #RRGGBB colour. */
+function luminance(hex) {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+const contrast = (a, b) => {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+/** Width and height of a PNG, from its IHDR chunk; null when the file is not a PNG. */
+function pngSize(bytes) {
+  const signature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+  if (bytes.length < 24 || !bytes.subarray(0, 8).equals(signature) || bytes.toString('latin1', 12, 16) !== 'IHDR') return null;
+  return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) };
+}
+
+/**
+ * OpenAI's plugin directory (ChatGPT and Codex) holds a remote MCP plugin to
+ * stricter rules at final submission than a package upload checks:
+ * developers.openai.com/plugins/deploy/submission ("Manifest fields") and
+ * /deploy/submission-errors ("Final directory submission").
+ */
+function checkOpenAIDirectory(where, pkg, manifest) {
+  const breaks = ['\r', '\n', String.fromCharCode(0x2028), String.fromCharCode(0x2029)];
+  const oneLine = (value) => typeof value === 'string' && value.trim() !== '' && !breaks.some((c) => value.includes(c));
+  const ext = manifest.extensions?.['com.openai'] ?? {};
+  const ui = ext.interface ?? {};
+  if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(manifest.version ?? '')) fail(where, 'version must be a semantic version');
+  if (!/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(manifest.name ?? '')) fail(where, 'name must be at most 64 ASCII letters, digits, _ or -');
+  if (typeof manifest.description !== 'string' || !manifest.description.trim() || manifest.description.length > 1024) fail(where, 'description must be 1-1024 characters');
+  if (typeof manifest.author?.name !== 'string' || manifest.author.name.length > 120) fail(where, 'author.name is required, at most 120 characters');
+
+  for (const [key, max] of [['displayName', 30], ['shortDescription', 30], ['developerName', 80]]) {
+    if (!oneLine(ui[key]) || ui[key].length > max) fail(where, `interface.${key} must be one line of at most ${max} characters`);
+  }
+  if (typeof ui.longDescription !== 'string' || !ui.longDescription.trim() || ui.longDescription.length > 4000) fail(where, 'interface.longDescription must be 1-4000 characters');
+  const categories = ['Productivity', 'Creativity', 'Developer Tools', 'Business & Operations', 'Data & Analytics', 'Communication', 'Education & Research', 'Security', 'Finance', 'Healthcare', 'Travel', 'Entertainment', 'Other'];
+  if (!categories.includes(ui.category)) fail(where, `interface.category must be one of: ${categories.join(', ')}`);
+  if (!Array.isArray(ui.capabilities) || ui.capabilities.length > 20 || !ui.capabilities.every((c) => oneLine(c) && c.length <= 120)) {
+    fail(where, 'interface.capabilities must be at most 20 one-line entries of at most 120 characters');
+  }
+  // A remote MCP plugin needs all four listing URLs.
+  for (const key of ['websiteURL', 'supportURL', 'privacyPolicyURL', 'termsOfServiceURL']) {
+    if (!isHttpsUrl(ui[key]) || ui[key].length > 1024) fail(where, `interface.${key} must be an https URL of at most 1024 characters`);
+  }
+  const prompts = ui.defaultPrompt === undefined ? [] : [].concat(ui.defaultPrompt);
+  if (prompts.length > 3) fail(where, 'interface.defaultPrompt takes at most three prompts');
+  const seen = new Set();
+  for (const prompt of prompts) {
+    if (!oneLine(prompt) || prompt.length > 128) fail(where, `starter prompt must be one line of at most 128 characters: ${prompt}`);
+    if (/@\S/.test(prompt ?? '')) fail(where, `starter prompt must not @mention a server: ${prompt}`);
+    const key = String(prompt).normalize('NFKC').replace(/\s+/g, ' ').trim().toLowerCase();
+    if (seen.has(key)) fail(where, `duplicate starter prompt: ${prompt}`);
+    seen.add(key);
+  }
+  if (ui.brandColor !== undefined && contrast(ui.brandColor, '#FFFFFF') < 2) fail(where, 'interface.brandColor needs at least 2:1 contrast against white');
+  if (ui.brandColorDark !== undefined && (!/^#[0-9A-Fa-f]{6}$/.test(ui.brandColorDark) || contrast(ui.brandColorDark, '#212121') < 2)) {
+    fail(where, 'interface.brandColorDark must be #RRGGBB with at least 2:1 contrast against #212121');
+  }
+  // Icons: square PNGs of 48 to 4096 pixels, at most 5 MiB, ./-prefixed and inside the package.
+  for (const key of ['logo', 'composerIcon', 'logoDark', 'composerIconDark']) {
+    const rel = ui[key];
+    if (rel === undefined) {
+      if (key === 'logo' || key === 'composerIcon') fail(where, `interface.${key} is required`);
+      continue;
+    }
+    if (typeof rel !== 'string' || !rel.startsWith('./') || !insideRoot(rel, pkg) || !existsSync(join(ROOT, pkg, rel))) {
+      fail(where, `interface.${key} must be a ./ path to a file inside the package`);
+      continue;
+    }
+    const bytes = readFileSync(join(ROOT, pkg, rel));
+    const size = pngSize(bytes);
+    if (!rel.endsWith('.png') || !size) fail(where, `interface.${key} must be a PNG`);
+    else if (size.width !== size.height || size.width < 48 || size.width > 4096) fail(where, `interface.${key} must be square, 48 to 4096 pixels`);
+    if (bytes.length > 5 * 1024 * 1024) fail(where, `interface.${key} is over 5 MiB`);
+  }
+  // Screenshots are allowed only for a server that renders its own UI; Stride's does not.
+  if (ui.screenshots !== undefined) fail(where, 'interface.screenshots: Stride has no custom UI, so the directory rejects screenshots');
+
+  const review = ext.review;
+  if (!review) return fail(where, 'extensions["com.openai"].review is missing');
+  for (const key of ['test_credentials', 'reviewer_instructions']) {
+    if (key in review) fail(where, `review.${key}: reviewer sign-in goes in OpenAI's dashboard, never in the package`);
+  }
+  const positive = review.test_cases?.positive ?? [];
+  const negative = review.test_cases?.negative ?? [];
+  if (positive.length !== 5) fail(where, `review needs exactly five positive test cases (found ${positive.length})`);
+  if (negative.length !== 3) fail(where, `review needs exactly three negative test cases (found ${negative.length})`);
+  for (const [i, c] of positive.entries()) {
+    for (const key of ['description', 'prompt', 'tools_triggered', 'expected_behavior']) {
+      if (typeof c[key] !== 'string' || !c[key].trim()) fail(where, `positive test case ${i + 1} needs ${key}`);
+    }
+    if ((c.description ?? '').length > 4000) fail(where, `positive test case ${i + 1}: description over 4000 characters`);
+    for (const tool of String(c.tools_triggered ?? '').split(',')) {
+      if (!/^stride\.[a-z_]+$/.test(tool.trim())) fail(where, `positive test case ${i + 1}: "${tool.trim()}" is not a Stride tool name`);
+    }
+  }
+  for (const [i, c] of negative.entries()) {
+    for (const key of ['description', 'prompt']) {
+      if (typeof c[key] !== 'string' || !c[key].trim()) fail(where, `negative test case ${i + 1} needs ${key}`);
+    }
+  }
+  if (!isHttpsUrl(review.demo_recording_url)) fail(where, 'review.demo_recording_url must be an https URL');
+  if (typeof review.commerce !== 'boolean') fail(where, 'review.commerce must be true or false');
+  const notes = ext.publication?.release_notes;
+  if (typeof notes !== 'string' || !notes.trim()) fail(where, 'publication.release_notes is required');
+}
+
 // ── Claude Code ────────────────────────────────────────────────────────────
 {
   const pkg = 'claude-code';
@@ -189,6 +299,7 @@ function checkAuthor(where, author, { requireName = true, allowed }) {
       if (ui.logo !== undefined && !(insideRoot(ui.logo, pkg) && existsSync(join(ROOT, pkg, ui.logo)))) fail(where, 'interface.logo must be a file inside the package');
       if (ui.brandColor !== undefined && !/^#[0-9A-Fa-f]{6}$/.test(ui.brandColor)) fail(where, 'interface.brandColor must be #RRGGBB');
     }
+    checkOpenAIDirectory(where, pkg, manifest);
   }
   const mcpWhere = `${pkg}/mcp.json`;
   const mcp = readJson(mcpWhere);
